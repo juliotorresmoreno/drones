@@ -29,13 +29,10 @@ export class DronesController {
   }
 
   @Get()
-  async findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
-    return this.dronesService
-      .findAll({ skip, take })
-      .then(([data, total]) => ({ data, total }))
-      .catch((err) => {
-        throw new NotFoundException();
-      });
+  findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
+    return this.dronesService.findAll({ skip, take }).catch((err) => {
+      throw new NotFoundException();
+    });
   }
 
   @Get(':id')

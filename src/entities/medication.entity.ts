@@ -14,6 +14,8 @@ export class Medication {
   @Column({ length: 100 })
   code: string;
 
-  @Column()
+  @Column({
+    type: 'text'
+  })
   image: string;
 }

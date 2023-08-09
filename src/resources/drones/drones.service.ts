@@ -19,14 +19,16 @@ export class DronesService {
   }
 
   findAll(options?: FindManyOptions<Drone>) {
-    return this.repository.findAndCount(options);
+    return this.repository
+      .findAndCount(options)
+      .then(([data, total]) => ({ data, total }));
   }
 
   findOne(id: number) {
     return this.repository.findOne({ where: { id } });
   }
 
-  async update(id: number, updateDroneDto: UpdateDroneDto) {    
+  async update(id: number, updateDroneDto: UpdateDroneDto) {
     return this.repository
       .update(id, updateDroneDto)
       .then(() => this.findOne(id));

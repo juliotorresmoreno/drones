@@ -1,19 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, Query } from '@nestjs/common';
 import { MedicationsService } from './medications.service';
-import { CreateMedicationDto } from './dto/create-medication.dto';
-import { UpdateMedicationDto } from './dto/update-medication.dto';
+import { CreateMedicationDto, CreateMedicationDtoSchema } from './dto/create-medication.dto';
+import { UpdateMedicationDto, UpdateMedicationDtoSchema } from './dto/update-medication.dto';
+import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
 
 @Controller('medications')
 export class MedicationsController {
   constructor(private readonly medicationsService: MedicationsService) {}
 
   @Post()
+  @UsePipes(new JoiValidationPipe(CreateMedicationDtoSchema))
   create(@Body() createMedicationDto: CreateMedicationDto) {
     return this.medicationsService.create(createMedicationDto);
   }
 
   @Get()
-  findAll() {
+  findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
     return this.medicationsService.findAll();
   }
 
@@ -23,6 +25,7 @@ export class MedicationsController {
   }
 
   @Patch(':id')
+  @UsePipes(new JoiValidationPipe(UpdateMedicationDtoSchema))
   update(@Param('id') id: string, @Body() updateMedicationDto: UpdateMedicationDto) {
     return this.medicationsService.update(+id, updateMedicationDto);
   }
