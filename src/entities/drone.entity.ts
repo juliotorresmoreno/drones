@@ -1,17 +1,24 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-export type ModelDrone =
-  | 'Lightweight'
-  | 'Middleweight'
-  | 'Cruiserweight'
-  | 'Heavyweight';
-export type StateDrone =
-  | 'IDLE'
-  | 'LOADING'
-  | 'LOADED'
-  | 'DELIVERING'
-  | 'DELIVERED'
-  | 'RETURNING';
+export enum ModelsDrone {
+  Lightweight = 'Lightweight',
+  Middleweight = 'Middleweight',
+  Cruiserweight = 'Cruiserweight',
+  Heavyweight = 'Heavyweight'
+};
+
+export type ModelDrone = ModelsDrone;
+
+export enum StatesDrone {
+  IDLE = 'IDLE',
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
+  DELIVERING = 'DELIVERING',
+  DELIVERED = 'DELIVERED',
+  RETURNING = 'RETURNING'
+};
+
+export type StateDrone = StatesDrone;
 
 @Entity()
 export class Drone {

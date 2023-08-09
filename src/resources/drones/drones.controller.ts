@@ -10,11 +10,10 @@ import {
   NotFoundException,
   InternalServerErrorException,
   UsePipes,
-  NotImplementedException,
 } from '@nestjs/common';
 import { DronesService } from './drones.service';
 import { CreateDroneDto, CreateDroneDtoSchema } from './dto/create-drone.dto';
-import { UpdateDroneDto } from './dto/update-drone.dto';
+import { UpdateDroneDto, UpdateDroneDtoSchema } from './dto/update-drone.dto';
 import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
 
 @Controller('drones')
@@ -47,6 +46,7 @@ export class DronesController {
   }
 
   @Patch(':id')
+  @UsePipes(new JoiValidationPipe(UpdateDroneDtoSchema))
   update(@Param('id') id: string, @Body() updateDroneDto: UpdateDroneDto) {
     return this.dronesService.update(+id, updateDroneDto).catch((err) => {
       throw new InternalServerErrorException();

@@ -26,10 +26,7 @@ export class DronesService {
     return this.repository.findOne({ where: { id } });
   }
 
-  async update(id: number, updateDroneDto: UpdateDroneDto) {
-    // Todo: do state machine.
-    // const record = await this.findOne(id)
-    
+  async update(id: number, updateDroneDto: UpdateDroneDto) {    
     return this.repository
       .update(id, updateDroneDto)
       .then(() => this.findOne(id));
