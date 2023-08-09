@@ -6,6 +6,7 @@ import { HomeModule } from './resources/home/home.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration, { validationSchema } from './config/configuration';
+import { DeliveriesModule } from './resources/deliveries/deliveries.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import configuration, { validationSchema } from './config/configuration';
     MedicationsModule,
     TravelsModule,
     HomeModule,
+    DeliveriesModule,
   ],
   controllers: [],
   providers: [],
