@@ -7,6 +7,7 @@ import { UpdateDeliveryDto } from './dto/update-delivery.dto';
 import { DronesService } from '../drones/drones.service';
 import { MedicationsService } from '../medications/medications.service';
 import { StateMachine } from './deliveries.stateMachine';
+import { StatesDrone } from 'src/entities/drone.entity';
 
 @Injectable()
 export class DeliveriesService {
@@ -88,14 +89,12 @@ export class DeliveriesService {
 
     try {
       this.stateMachine.transition(updateDeliveryDto.event, drone, medication);
-
-      if (updateDeliveryDto.event === 'FINISHED') {
-        delivery.state = 'finished';
-        await this.repository.save(delivery);
-      }
     } finally {
       drone.state = this.stateMachine.currentState;
       await this.droneService.update(drone.id, drone);
+      if (updateDeliveryDto.event === 'FINISHED' && drone.state === StatesDrone.IDLE) {
+        await this.repository.save({ id: delivery.id, state: 'finished' });
+      }
     }
 
     return this.findOne(id);

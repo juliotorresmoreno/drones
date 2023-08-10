@@ -25,13 +25,15 @@ import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
 
 @Controller('deliveries')
 export class DeliveriesController {
+  private readonly logger = new Logger(DeliveriesController.name);
+
   constructor(private readonly deliveriesService: DeliveriesService) {}
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateDeliveryDtoSchema))
   create(@Body() createDeliveryDto: CreateDeliveryDto) {
     return this.deliveriesService.create(createDeliveryDto).catch((err) => {
-      Logger.error(err);
+      this.logger.error(err);
       if (err instanceof HttpException) {
         throw err;
       }
@@ -47,7 +49,7 @@ export class DeliveriesController {
         take,
       })
       .catch((err) => {
-        Logger.error(err);
+        this.logger.error(err);
         if (err instanceof HttpException) {
           throw err;
         }
@@ -57,15 +59,13 @@ export class DeliveriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.deliveriesService
-      .findOne(+id)
-      .catch((err) => {
-        Logger.error(err);
-        if (err instanceof HttpException) {
-          throw err;
-        }
-        throw new InternalServerErrorException();
-      });
+    return this.deliveriesService.findOne(+id).catch((err) => {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      }
+      throw new InternalServerErrorException();
+    });
   }
 
   @Patch(':id/transition')
@@ -77,7 +77,7 @@ export class DeliveriesController {
     return this.deliveriesService
       .transition(+id, updateDeliveryDto)
       .catch((err) => {
-        Logger.error(err);
+        this.logger.error(err);
         if (err instanceof HttpException) {
           throw err;
         }
@@ -91,7 +91,7 @@ export class DeliveriesController {
       .remove(+id)
       .then(() => ({ success: true }))
       .catch((err) => {
-        Logger.error(err);
+        this.logger.error(err);
         if (err instanceof HttpException) {
           throw err;
         }

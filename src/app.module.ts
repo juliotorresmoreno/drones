@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration, { validationSchema } from './config/configuration';
 import { DeliveriesModule } from './resources/deliveries/deliveries.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksService } from './services/tasks/tasks.service';
 
 @Module({
   imports: [
@@ -28,12 +30,13 @@ import { DeliveriesModule } from './resources/deliveries/deliveries.module';
         };
       },
     }),
+    ScheduleModule.forRoot(),
     DronesModule,
     MedicationsModule,
     HomeModule,
     DeliveriesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [TasksService],
 })
 export class AppModule {}
