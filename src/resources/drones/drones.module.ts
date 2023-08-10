@@ -8,5 +8,6 @@ import { Drone } from 'src/entities/drone.entity';
   imports: [TypeOrmModule.forFeature([Drone])],
   controllers: [DronesController],
   providers: [DronesService],
+  exports: [DronesService]
 })
 export class DronesModule {}

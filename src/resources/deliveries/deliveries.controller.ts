@@ -1,34 +1,101 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  Query,
+  InternalServerErrorException,
+  Logger,
+  HttpException,
+} from '@nestjs/common';
 import { DeliveriesService } from './deliveries.service';
-import { CreateDeliveryDto } from './dto/create-delivery.dto';
-import { UpdateDeliveryDto } from './dto/update-delivery.dto';
+import {
+  CreateDeliveryDto,
+  CreateDeliveryDtoSchema,
+} from './dto/create-delivery.dto';
+import {
+  UpdateDeliveryDto,
+  UpdateDeliveryDtoSchema,
+} from './dto/update-delivery.dto';
+import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
 
 @Controller('deliveries')
 export class DeliveriesController {
   constructor(private readonly deliveriesService: DeliveriesService) {}
 
   @Post()
+  @UsePipes(new JoiValidationPipe(CreateDeliveryDtoSchema))
   create(@Body() createDeliveryDto: CreateDeliveryDto) {
-    return this.deliveriesService.create(createDeliveryDto);
+    return this.deliveriesService.create(createDeliveryDto).catch((err) => {
+      Logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      }
+      throw new InternalServerErrorException();
+    });
   }
 
   @Get()
-  findAll() {
-    return this.deliveriesService.findAll();
+  findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
+    return this.deliveriesService
+      .findAll({
+        skip,
+        take,
+      })
+      .catch((err) => {
+        Logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
+        throw new InternalServerErrorException();
+      });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.deliveriesService.findOne(+id);
+    return this.deliveriesService
+      .findOne(+id)
+      .catch((err) => {
+        Logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
+        throw new InternalServerErrorException();
+      });
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDeliveryDto: UpdateDeliveryDto) {
-    return this.deliveriesService.update(+id, updateDeliveryDto);
+  @Patch(':id/transition')
+  @UsePipes(new JoiValidationPipe(UpdateDeliveryDtoSchema))
+  transition(
+    @Param('id') id: string,
+    @Body() updateDeliveryDto: UpdateDeliveryDto,
+  ) {
+    return this.deliveriesService
+      .transition(+id, updateDeliveryDto)
+      .catch((err) => {
+        Logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
+        throw new InternalServerErrorException();
+      });
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.deliveriesService.remove(+id);
+    return this.deliveriesService
+      .remove(+id)
+      .then(() => ({ success: true }))
+      .catch((err) => {
+        Logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
+        throw new InternalServerErrorException();
+      });
   }
 }

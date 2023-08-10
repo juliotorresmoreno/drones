@@ -28,7 +28,7 @@ export class DronesService {
     return this.repository.findOne({ where: { id } });
   }
 
-  async update(id: number, updateDroneDto: UpdateDroneDto) {
+  update(id: number, updateDroneDto: UpdateDroneDto) {
     return this.repository
       .update(id, updateDroneDto)
       .then(() => this.findOne(id));

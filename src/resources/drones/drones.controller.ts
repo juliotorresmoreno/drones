@@ -52,8 +52,11 @@ export class DronesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.dronesService.remove(+id).catch((err) => {
-      throw new InternalServerErrorException();
-    });
+    return this.dronesService
+      .remove(+id)
+      .then(() => ({ success: true }))
+      .catch((err) => {
+        throw new InternalServerErrorException();
+      });
   }
 }

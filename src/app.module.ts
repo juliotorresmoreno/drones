@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DronesModule } from './resources/drones/drones.module';
 import { MedicationsModule } from './resources/medications/medications.module';
-import { TravelsModule } from './resources/travels/travels.module';
 import { HomeModule } from './resources/home/home.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -31,7 +30,6 @@ import { DeliveriesModule } from './resources/deliveries/deliveries.module';
     }),
     DronesModule,
     MedicationsModule,
-    TravelsModule,
     HomeModule,
     DeliveriesModule,
   ],
