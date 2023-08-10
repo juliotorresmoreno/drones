@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { StatesDrone } from 'src/entities/drone.entity';
 import { DronesService } from 'src/resources/drones/drones.service';
-import { LessThanOrEqual, Not } from 'typeorm';
+import { LessThan } from 'typeorm';
 
 @Injectable()
 export class TasksService {
@@ -14,7 +14,7 @@ export class TasksService {
   async handleCron() {
     try {
       const query = {
-        battery: LessThanOrEqual(25),
+        battery: LessThan(25),
         state: StatesDrone.LOADING,
       };
       const drones = await this.dronesService.count({ where: query });
