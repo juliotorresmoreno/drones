@@ -14,7 +14,7 @@ import {
 import { DronesService } from './drones.service';
 import { CreateDroneDto, CreateDroneDtoSchema } from './dto/create-drone.dto';
 import { UpdateDroneDto, UpdateDroneDtoSchema } from './dto/update-drone.dto';
-import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
+import { JoiValidationPipe } from '../../pipes/joiValidation.pipe';
 
 @Controller('drones')
 export class DronesController {

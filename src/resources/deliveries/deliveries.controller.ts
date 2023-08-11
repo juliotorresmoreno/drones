@@ -21,7 +21,7 @@ import {
   UpdateDeliveryDto,
   UpdateDeliveryDtoSchema,
 } from './dto/update-delivery.dto';
-import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
+import { JoiValidationPipe } from '../../pipes/joiValidation.pipe';
 
 @Controller('deliveries')
 export class DeliveriesController {

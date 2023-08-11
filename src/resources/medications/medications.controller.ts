@@ -20,7 +20,7 @@ import {
   UpdateMedicationDto,
   UpdateMedicationDtoSchema,
 } from './dto/update-medication.dto';
-import { JoiValidationPipe } from 'src/pipes/joiValidation.pipe';
+import { JoiValidationPipe } from '../../pipes/joiValidation.pipe';
 
 @Controller('medications')
 export class MedicationsController {

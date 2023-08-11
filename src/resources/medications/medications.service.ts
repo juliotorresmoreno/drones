@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMedicationDto } from './dto/create-medication.dto';
 import { UpdateMedicationDto } from './dto/update-medication.dto';
-import { Medication } from 'src/entities/medication.entity';
+import { Medication } from '../../entities/medication.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 

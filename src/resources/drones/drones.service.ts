@@ -2,16 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateDroneDto } from './dto/create-drone.dto';
 import { UpdateDroneDto } from './dto/update-drone.dto';
 import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Drone } from 'src/entities/drone.entity';
+import { Drone } from '../../entities/drone.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class DronesService {
-  constructor(
-    @InjectRepository(Drone)
-    private repository: Repository<Drone>,
-  ) {}
+  constructor(@InjectRepository(Drone) private repository: Repository<Drone>) {}
 
   create(createDroneDto: CreateDroneDto) {
     return this.repository

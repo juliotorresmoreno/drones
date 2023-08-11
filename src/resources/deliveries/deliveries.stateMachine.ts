@@ -1,5 +1,5 @@
-import { Drone, StatesDrone } from 'src/entities/drone.entity';
-import { Medication } from 'src/entities/medication.entity';
+import { Drone, StatesDrone } from '../../entities/drone.entity';
+import { Medication } from '../../entities/medication.entity';
 
 export type Event =
   | 'START'

@@ -1,12 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MedicationsController } from './medications.controller';
 import { MedicationsService } from './medications.service';
+import { MedicationsModule } from './medications.module';
 
 describe('MedicationsController', () => {
   let controller: MedicationsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [MedicationsModule],
       controllers: [MedicationsController],
       providers: [MedicationsService],
     }).compile();

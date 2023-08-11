@@ -5,7 +5,7 @@ import {
   getClassSchema
 } from 'joi-class-decorators';
 import { ApiProperty } from '@nestjs/swagger';
-import { ModelDrone } from 'src/entities/drone.entity';
+import { ModelDrone } from '../../../entities/drone.entity';
 
 @JoiSchemaOptions({
     allowUnknown: false,

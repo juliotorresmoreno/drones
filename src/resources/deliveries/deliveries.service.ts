@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Delivery } from 'src/entities/delivery.entity';
+import { Delivery } from '../../entities/delivery.entity';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
 import { DronesService } from '../drones/drones.service';
 import { MedicationsService } from '../medications/medications.service';
 import { StateMachine } from './deliveries.stateMachine';
-import { StatesDrone } from 'src/entities/drone.entity';
+import { StatesDrone } from '../../entities/drone.entity';
 
 @Injectable()
 export class DeliveriesService {

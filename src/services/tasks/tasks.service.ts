@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { StatesDrone } from 'src/entities/drone.entity';
-import { DronesService } from 'src/resources/drones/drones.service';
+import { StatesDrone } from '../../entities/drone.entity';
+import { DronesService } from '../../resources/drones/drones.service';
 import { LessThan } from 'typeorm';
 
 @Injectable()

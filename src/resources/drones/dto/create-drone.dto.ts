@@ -5,7 +5,7 @@ import {
   getClassSchema,
 } from 'joi-class-decorators';
 import { ApiProperty } from '@nestjs/swagger';
-import { ModelDrone, StateDrone } from 'src/entities/drone.entity';
+import { ModelDrone, StateDrone } from '../../../entities/drone.entity';
 
 @JoiSchemaOptions({
   allowUnknown: false,
@@ -17,12 +17,9 @@ export class CreateDroneDto {
 
   @ApiProperty()
   @JoiSchema(
-    Joi.string().valid(
-      'Lightweight',
-      'Middleweight',
-      'Cruiserweight',
-      'Heavyweight',
-    ).required(),
+    Joi.string()
+      .valid('Lightweight', 'Middleweight', 'Cruiserweight', 'Heavyweight')
+      .required(),
   )
   readonly model: ModelDrone;
 
