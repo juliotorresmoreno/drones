@@ -5,7 +5,7 @@ import {
   getClassSchema,
 } from 'joi-class-decorators';
 import { ApiProperty } from '@nestjs/swagger';
-import { ModelDrone, StateDrone } from '../../../entities/drone.entity';
+import { ModelDrone } from '../../../entities/drone.entity';
 
 @JoiSchemaOptions({
   allowUnknown: false,
@@ -24,26 +24,11 @@ export class CreateDroneDto {
   readonly model: ModelDrone;
 
   @ApiProperty()
-  @JoiSchema(Joi.number().required())
+  @JoiSchema(Joi.number().min(0).max(1000).required())
   readonly weight: number;
 
   @ApiProperty()
   @JoiSchema(Joi.number().min(0).max(100).required())
   readonly battery: number;
-
-  @ApiProperty()
-  @JoiSchema(
-    Joi.string()
-      .valid(
-        'IDLE',
-        'LOADING',
-        'LOADED',
-        'DELIVERING',
-        'DELIVERED',
-        'RETURNING',
-      )
-      .required(),
-  )
-  readonly state: StateDrone;
 }
 export const CreateDroneDtoSchema = getClassSchema(CreateDroneDto);

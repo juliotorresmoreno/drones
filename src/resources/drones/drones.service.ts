@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateDroneDto } from './dto/create-drone.dto';
 import { UpdateDroneDto } from './dto/update-drone.dto';
 import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
-import { Drone } from '../../entities/drone.entity';
+import { Drone, StatesDrone } from '../../entities/drone.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -12,7 +12,7 @@ export class DronesService {
 
   create(createDroneDto: CreateDroneDto) {
     return this.repository
-      .insert(createDroneDto)
+      .insert({ ...createDroneDto, state: StatesDrone.IDLE })
       .then(({ identifiers }) => this.findOne(+identifiers[0].id));
   }
 

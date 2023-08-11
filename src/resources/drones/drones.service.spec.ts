@@ -45,7 +45,6 @@ describe('DronesService', () => {
       battery: 20,
       model: ModelsDrone.Cruiserweight,
       serial_number: '01234',
-      state: StatesDrone.IDLE,
       weight: 500,
     });
     expect(drone.id > 0).toBeTruthy();
