@@ -13,7 +13,7 @@ import { ModelDrone } from '../../../entities/drone.entity';
 export class UpdateDroneDto {
   @ApiProperty()
   @JoiSchema(Joi.string())
-  readonly serial_number: string;
+  readonly serial_number?: string;
 
   @ApiProperty()
   @JoiSchema(
@@ -24,15 +24,15 @@ export class UpdateDroneDto {
       'Heavyweight',
     ),
   )
-  readonly model: ModelDrone;
+  readonly model?: ModelDrone;
 
   @ApiProperty()
   @JoiSchema(Joi.number().min(0).max(1000))
-  readonly weight: number;
+  readonly weight?: number;
 
   @ApiProperty()
   @JoiSchema(Joi.number().min(0).max(100))
-  readonly battery: number;
+  readonly battery?: number;
 }
 
 export const UpdateDroneDtoSchema = getClassSchema(UpdateDroneDto);

@@ -57,10 +57,10 @@ export class DeliveriesService {
   findAll(options: FindManyOptions<Delivery> = {}) {
     return this.repository
       .findAndCount({
-        ...options,
         cache: true,
         loadEagerRelations: true,
         relations: ['drone', 'medication'],
+        ...options,
       })
       .then(([data, total]) => ({ data, total }));
   }
@@ -92,7 +92,10 @@ export class DeliveriesService {
     } finally {
       drone.state = this.stateMachine.currentState;
       await this.droneService.update(drone.id, drone);
-      if (updateDeliveryDto.event === 'FINISHED' && drone.state === StatesDrone.IDLE) {
+      if (
+        updateDeliveryDto.event === 'FINISHED' &&
+        drone.state === StatesDrone.IDLE
+      ) {
         await this.repository.save({ id: delivery.id, state: 'finished' });
       }
     }
