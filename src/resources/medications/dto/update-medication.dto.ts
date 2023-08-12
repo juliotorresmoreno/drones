@@ -8,7 +8,7 @@ export class UpdateMedicationDto {
   name?: string;
 
   @ApiProperty()
-  @JoiSchema(Joi.number())
+  @JoiSchema(Joi.number().min(0).max(1000))
   weight?: number;
 
   @ApiProperty()

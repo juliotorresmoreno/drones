@@ -15,7 +15,7 @@ export class CreateMedicationDto {
   name: string;
 
   @ApiProperty()
-  @JoiSchema(Joi.number().required())
+  @JoiSchema(Joi.number().min(0).max(1000).required())
   weight: number;
 
   @ApiProperty()

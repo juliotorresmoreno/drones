@@ -11,7 +11,7 @@ describe('DronesController', () => {
 
   beforeEach(async () => {
     const entities = [Drone];
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
@@ -34,7 +34,7 @@ describe('DronesController', () => {
       providers: [DronesService],
     }).compile();
 
-    controller = app.get<DronesController>(DronesController);
+    controller = module.get<DronesController>(DronesController);
   });
 
   it('should be defined', () => {
