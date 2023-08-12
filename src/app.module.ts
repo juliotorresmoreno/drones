@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { DronesModule } from './resources/drones/drones.module';
 import { MedicationsModule } from './resources/medications/medications.module';
 import { HomeModule } from './resources/home/home.module';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration, { validationSchema } from './config/configuration';
 import { DeliveriesModule } from './resources/deliveries/deliveries.module';
-import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from './services/tasks/tasks.service';
 
 @Module({
