@@ -10,6 +10,8 @@ import {
   Query,
   InternalServerErrorException,
   NotFoundException,
+  Logger,
+  HttpException,
 } from '@nestjs/common';
 import { MedicationsService } from './medications.service';
 import {
@@ -24,12 +26,18 @@ import { JoiValidationPipe } from '../../pipes/joiValidation.pipe';
 
 @Controller('medications')
 export class MedicationsController {
+  private readonly logger = new Logger(MedicationsController.name);
+
   constructor(private readonly medicationsService: MedicationsService) {}
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateMedicationDtoSchema))
   create(@Body() createMedicationDto: CreateMedicationDto) {
-    return this.medicationsService.create(createMedicationDto).catch(() => {
+    return this.medicationsService.create(createMedicationDto).catch((err) => {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      }
       throw new InternalServerErrorException();
     });
   }
@@ -37,6 +45,10 @@ export class MedicationsController {
   @Get()
   findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
     return this.medicationsService.findAll().catch((err) => {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      }
       throw new NotFoundException();
     });
   }
@@ -44,6 +56,10 @@ export class MedicationsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medicationsService.findOne(+id).catch((err) => {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      }
       throw new NotFoundException();
     });
   }
@@ -57,6 +73,10 @@ export class MedicationsController {
     return this.medicationsService
       .update(+id, updateMedicationDto)
       .catch((err) => {
+        this.logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
         throw new InternalServerErrorException();
       });
   }
@@ -67,6 +87,10 @@ export class MedicationsController {
       .remove(+id)
       .then(() => ({ success: true }))
       .catch((err) => {
+        this.logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
         throw new InternalServerErrorException();
       });
   }
