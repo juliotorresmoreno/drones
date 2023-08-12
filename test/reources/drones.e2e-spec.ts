@@ -67,6 +67,35 @@ describe('DronesController (e2e)', () => {
       });
   });
 
+  it('/drones/{id} (GET)', async () => {
+    let drone;
+    await request(app.getHttpServer())
+      .post('/drones')
+      .send({
+        battery: 20,
+        model: ModelsDrone.Cruiserweight,
+        serial_number: '01234',
+        weight: 500,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .expect((res) => {
+        drone = res.body;
+        const { error } = droneSchema.validate(drone);
+        expect(error).toBeUndefined();
+      });
+
+    return request(app.getHttpServer())
+      .get('/drones/' + drone.id)
+      .expect(200)
+      .expect(function (res) {
+        drone = res.body;
+        const { error } = droneSchema.validate(drone);
+        expect(error).toBeUndefined();
+      });
+  });
+
   it('/drones (POST)', async () => {
     return request(app.getHttpServer())
       .post('/drones')
@@ -86,7 +115,7 @@ describe('DronesController (e2e)', () => {
       });
   });
 
-  it('/drones (PATCH)', async () => {
+  it('/drones/{id} (PATCH)', async () => {
     let drone;
     await request(app.getHttpServer())
       .post('/drones')
