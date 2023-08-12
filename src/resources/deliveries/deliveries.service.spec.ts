@@ -177,4 +177,26 @@ describe('DeliveriesService', () => {
     delivery = await service.findOne(drone.id);
     expect(delivery).toBeNull();
   });
+
+  it('should be failed', async () => {
+    await service
+      .create({
+        drone_id: drone.id,
+        medication_id: 100,
+      })
+      .catch((err) => {
+        expect(err instanceof Error).toBeTruthy();
+      });
+  });
+
+  it('should be failed', async () => {
+    await service
+      .create({
+        drone_id: 100,
+        medication_id: medication.id,
+      })
+      .catch((err) => {
+        expect(err instanceof Error).toBeTruthy();
+      });
+  });
 });
