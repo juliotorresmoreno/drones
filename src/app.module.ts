@@ -8,6 +8,9 @@ import { HomeModule } from './resources/home/home.module';
 import configuration, { validationSchema } from './config/configuration';
 import { DeliveriesModule } from './resources/deliveries/deliveries.module';
 import { TasksService } from './services/tasks/tasks.service';
+import { Drone } from './entities/drone.entity';
+import { Medication } from './entities/medication.entity';
+import { Delivery } from './entities/delivery.entity';
 
 @Module({
   imports: [
@@ -18,6 +21,14 @@ import { TasksService } from './services/tasks/tasks.service';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
+        if (process.env.NODE_ENV === 'testing') {
+          return {
+            type: 'sqlite',
+            database: `:memory:`,
+            entities: [Drone, Medication, Delivery],
+            synchronize: true,
+          };
+        }
         return {
           type: process.env.DB_DRIVER as any,
           host: process.env.DB_HOST,
