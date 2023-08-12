@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateDroneDto } from './dto/create-drone.dto';
 import { UpdateDroneDto } from './dto/update-drone.dto';
 import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
-import { Drone, StatesDrone } from '../../entities/drone.entity';
+import { Drone, StateDrone, StatesDrone } from '../../entities/drone.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -10,9 +10,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class DronesService {
   constructor(@InjectRepository(Drone) private repository: Repository<Drone>) {}
 
-  create(createDroneDto: CreateDroneDto) {
+  create({
+    state = StatesDrone.IDLE,
+    ...CreateDroneDto
+  }: CreateDroneDto & { state?: StateDrone }) {
     return this.repository
-      .insert({ ...createDroneDto, state: StatesDrone.IDLE })
+      .insert({ ...CreateDroneDto, state })
       .then(({ identifiers }) => this.findOne(+identifiers[0].id));
   }
 
@@ -30,7 +33,7 @@ export class DronesService {
     return this.repository.findOne({ where: { id } });
   }
 
-  update(id: number, updateDroneDto: UpdateDroneDto) {
+  update(id: number, updateDroneDto: UpdateDroneDto & { state?: StateDrone }) {
     return this.repository
       .update(id, updateDroneDto)
       .then(() => this.findOne(id));
