@@ -151,4 +151,28 @@ describe('DronesController (e2e)', () => {
         expect(error).toBeUndefined();
       });
   });
+
+  it('/drones/{id} (GET)', async () => {
+    let drone;
+    await request(app.getHttpServer())
+      .post('/drones')
+      .send({
+        battery: 20,
+        model: ModelsDrone.Cruiserweight,
+        serial_number: '01234',
+        weight: 500,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .expect((res) => {
+        drone = res.body;
+        const { error } = droneSchema.validate(drone);
+        expect(error).toBeUndefined();
+      });
+
+    return request(app.getHttpServer())
+      .delete('/drones/' + drone.id)
+      .expect(200);
+  });
 });
