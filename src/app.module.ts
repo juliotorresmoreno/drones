@@ -21,7 +21,7 @@ import { Delivery } from './entities/delivery.entity';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
-        if (process.env.NODE_ENV === 'testing') {
+        if (process.env.NODE_ENV === 'test') {
           return {
             type: 'sqlite',
             database: `:memory:`,
