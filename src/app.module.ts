@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -12,23 +12,32 @@ import { Drone } from './entities/drone.entity';
 import { Medication } from './entities/medication.entity';
 import { Delivery } from './entities/delivery.entity';
 
+const getEnvironmentFile = () => {
+  if (process.env.NODE_ENV === 'test') {
+    return '.env.test';
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return '.env';
+  }
+  return '.env.develop';
+};
+
+const entities = [Drone, Medication, Delivery];
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
       validationSchema: validationSchema,
+      envFilePath: (() => {
+        let envFile = getEnvironmentFile();
+        Logger.debug('loading ' + envFile + ' file');
+        return envFile;
+      })(),
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
-        if (process.env.NODE_ENV === 'test') {
-          return {
-            type: 'sqlite',
-            database: `:memory:`,
-            entities: [Drone, Medication, Delivery],
-            synchronize: true,
-          };
-        }
         return {
           type: process.env.DB_DRIVER as any,
           host: process.env.DB_HOST,
@@ -36,7 +45,7 @@ import { Delivery } from './entities/delivery.entity';
           username: process.env.DB_USERNAME,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_NAME,
-          entities: [__dirname + '/entities/*.entity{.ts,.js}'],
+          entities,
           synchronize: process.env.DB_SYNC === 'true',
         };
       },

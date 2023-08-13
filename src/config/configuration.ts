@@ -7,14 +7,10 @@ export const validationSchema = Joi.object({
   PORT: Joi.number().default(3000),
   APP_NAME: Joi.string().required(),
 
-  DB_HOST: Joi.string().default('localhost'),
-  DB_PORT: Joi.string().required(),
-  DB_USERNAME: Joi.string().required(),
-  DB_PASSWORD: Joi.string().required(),
-  DB_NAME: Joi.string().required(),
+  DB_NAME: Joi.string().default(':memory:').required(),
   DB_DRIVER: Joi.string()
-    .valid('postgres', 'mysql', 'oracle', 'mssql', 'mongodb')
-    .default('postgres'),
+    .valid('postgres', 'mysql', 'oracle', 'mssql', 'sqlite')
+    .default('sqlite'),
   DB_SYNC: Joi.string().valid('true', 'false').optional(),
   ALLOW_ORIGIN: Joi.string().required(),
 });
