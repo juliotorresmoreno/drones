@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../../src/app.module';
 import * as Joi from 'joi';
+import { AppModule } from './../../src/app.module';
 import { ModelsDrone } from './../../src/entities/drone.entity';
 
 describe('DronesController (e2e)', () => {
@@ -152,7 +152,7 @@ describe('DronesController (e2e)', () => {
       });
   });
 
-  it('/drones/{id} (GET)', async () => {
+  it('/drones/{id} (DELETE)', async () => {
     let drone;
     await request(app.getHttpServer())
       .post('/drones')
