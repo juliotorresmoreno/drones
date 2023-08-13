@@ -49,13 +49,21 @@ export class DronesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.dronesService.findOne(+id).catch((err) => {
-      this.logger.error(err);
-      if (err instanceof HttpException) {
-        throw err;
-      }
-      throw new NotFoundException();
-    });
+    return this.dronesService
+      .findOne(+id)
+      .then((result) => {
+        if (!result) {
+          throw new NotFoundException();
+        }
+        return result;
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
+        throw new NotFoundException();
+      });
   }
 
   @Patch(':id')

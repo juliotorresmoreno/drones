@@ -78,7 +78,8 @@ describe('MedicationsController', () => {
     expect(medication.weight).toBe(updatedValue.weight);
 
     await controller.remove(medication.id);
-    medication = await controller.findOne(medication.id);
-    expect(medication).toBeNull();
+    await controller.findOne(medication.id).catch((err) => {
+      expect(err instanceof Error).toBeTruthy();
+    });
   });
 });

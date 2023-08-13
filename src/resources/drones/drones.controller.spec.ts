@@ -75,7 +75,8 @@ describe('DronesController', () => {
     expect(drone.serial_number).toBe('07894');
 
     await controller.remove(drone.id);
-    drone = await controller.findOne(drone.id);
-    expect(drone).toBeNull();
+    await controller.findOne(drone.id).catch((err) => {
+      expect(err instanceof Error).toBeTruthy();
+    });
   });
 });

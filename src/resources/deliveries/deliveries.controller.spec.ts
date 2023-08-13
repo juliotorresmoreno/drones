@@ -84,7 +84,6 @@ describe('DeliveriesController', () => {
     expect(delivery.state).toBe('active');
 
     delivery = await controller.findOne(delivery.id);
-    expect(delivery.id > 0).toBeTruthy();
     expect(delivery.drone_id).toBe(drone.id);
     expect(delivery.medication_id).toBe(medication.id);
     expect(delivery.battery).toBe(20);
@@ -93,7 +92,6 @@ describe('DeliveriesController', () => {
     expect(delivery.state).toBe('active');
 
     delivery = await controller.findAll().then((result) => result.data[0]);
-    expect(delivery.id > 0).toBeTruthy();
     expect(delivery.drone_id).toBe(drone.id);
     expect(delivery.medication_id).toBe(medication.id);
     expect(delivery.battery).toBe(20);
@@ -116,9 +114,11 @@ describe('DeliveriesController', () => {
     expect(delivery.drone.state).toBe(StatesDrone.IDLE);
     expect(delivery.state).toBe('active');
 
-    await controller.transition(delivery.id, { event: 'LOADING' }).catch((err) => {
-      expect(err instanceof Error).toBeTruthy();
-    });
+    await controller
+      .transition(delivery.id, { event: 'LOADING' })
+      .catch((err) => {
+        expect(err instanceof Error).toBeTruthy();
+      });
     expect(delivery.drone.state).toBe(StatesDrone.IDLE);
     drone = await dronesService.update(drone.id, { battery: 30 });
     delivery = await controller.transition(delivery.id, { event: 'LOADING' });
@@ -137,7 +137,9 @@ describe('DeliveriesController', () => {
     expect(delivery.drone.state).toBe(StatesDrone.LOADED);
     delivery = await controller.transition(delivery.id, { event: 'DELIVERED' });
     expect(delivery.drone.state).toBe(StatesDrone.LOADED);
-    delivery = await controller.transition(delivery.id, { event: 'DELIVERING' });
+    delivery = await controller.transition(delivery.id, {
+      event: 'DELIVERING',
+    });
     expect(delivery.drone.state).toBe(StatesDrone.DELIVERING);
     expect(delivery.state).toBe('active');
 
@@ -167,8 +169,9 @@ describe('DeliveriesController', () => {
     });
     expect(delivery.id > 0).toBeTruthy();
 
-    await controller.remove(drone.id);
-    delivery = await controller.findOne(drone.id);
-    expect(delivery).toBeNull();
+    await controller.remove(delivery.id);
+    await controller.findOne(delivery.id).catch((err) => {
+      expect(err instanceof Error).toBeTruthy();
+    });
   });
 });

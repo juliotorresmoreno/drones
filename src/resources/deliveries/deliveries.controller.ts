@@ -11,6 +11,7 @@ import {
   InternalServerErrorException,
   Logger,
   HttpException,
+  NotFoundException,
 } from '@nestjs/common';
 import { DeliveriesService } from './deliveries.service';
 import {
@@ -59,13 +60,21 @@ export class DeliveriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.deliveriesService.findOne(+id).catch((err) => {
-      this.logger.error(err);
-      if (err instanceof HttpException) {
-        throw err;
-      }
-      throw new InternalServerErrorException();
-    });
+    return this.deliveriesService
+      .findOne(+id)
+      .then((result) => {
+        if (!result) {
+          throw new NotFoundException();
+        }
+        return result;
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        if (err instanceof HttpException) {
+          throw err;
+        }
+        throw new InternalServerErrorException();
+      });
   }
 
   @Patch(':id/transition')
