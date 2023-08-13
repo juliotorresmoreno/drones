@@ -5,14 +5,13 @@ export const validationSchema = Joi.object({
     .valid('development', 'production', 'test', 'provision')
     .default('development'),
   PORT: Joi.number().default(3000),
-  APP_NAME: Joi.string().required(),
-
-  DB_NAME: Joi.string().default(':memory:').required(),
+  APP_NAME: Joi.string().default('Drone'),
+  DB_NAME: Joi.string().default(':memory:'),
   DB_DRIVER: Joi.string()
     .valid('postgres', 'mysql', 'oracle', 'mssql', 'sqlite')
     .default('sqlite'),
-  DB_SYNC: Joi.string().valid('true', 'false').optional(),
-  ALLOW_ORIGIN: Joi.string().required(),
+  DB_SYNC: Joi.string().valid('true', 'false').default('true').optional(),
+  ALLOW_ORIGIN: Joi.string().default('*'),
 });
 
 type Configuration = {

@@ -11,6 +11,7 @@ import { TasksService } from './services/tasks/tasks.service';
 import { Drone } from './entities/drone.entity';
 import { Medication } from './entities/medication.entity';
 import { Delivery } from './entities/delivery.entity';
+import * as fs from 'fs';
 
 const getEnvironmentFile = () => {
   if (process.env.NODE_ENV === 'test') {
@@ -33,6 +34,9 @@ const entities = [Drone, Medication, Delivery];
       envFilePath: (() => {
         let envFile = getEnvironmentFile();
         Logger.debug('loading ' + envFile + ' file');
+        if (!fs.existsSync(envFile)) {
+          return [];
+        }
         return envFile;
       })(),
     }),
