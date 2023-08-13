@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Drone, StatesDrone } from '../../entities/drone.entity';
 import { Medication } from '../../entities/medication.entity';
 
@@ -22,7 +23,7 @@ export class StateMachine {
       case StatesDrone.IDLE:
         if (event === 'LOADING') {
           if (drone.battery < 25) {
-            throw new Error('The battery is too low');
+            throw new BadRequestException('The battery is too low');
           }
           this._currentState = StatesDrone.LOADING;
         }
@@ -53,7 +54,7 @@ export class StateMachine {
         } else if (event === 'START') {
           this._currentState = StatesDrone.IDLE;
           if (drone.weight < medication.weight) {
-            throw new Error('The medicine is too heavy!');
+            throw new BadRequestException('The medicine is too heavy!');
           }
         }
         break;
