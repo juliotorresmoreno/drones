@@ -7,6 +7,7 @@ import { ModelsDrone } from './../../src/entities/drone.entity';
 
 describe('DronesController (e2e)', () => {
   let app: INestApplication;
+  let drone;
 
   const droneSchema = Joi.object({
     id: Joi.number().required(),
@@ -42,9 +43,7 @@ describe('DronesController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
 
-  it('/drones (GET)', async () => {
     await request(app.getHttpServer())
       .post('/drones')
       .send({
@@ -55,8 +54,15 @@ describe('DronesController (e2e)', () => {
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201);
+      .expect(201)
+      .expect(function (res) {
+        drone = res.body;
+        const { error } = droneSchema.validate(drone);
+        expect(error).toBeUndefined();
+      });
+  });
 
+  it('/drones (GET)', async () => {
     return request(app.getHttpServer())
       .get('/drones')
       .expect(200)
@@ -68,24 +74,6 @@ describe('DronesController (e2e)', () => {
   });
 
   it('/drones/{id} (GET)', async () => {
-    let drone;
-    await request(app.getHttpServer())
-      .post('/drones')
-      .send({
-        battery: 20,
-        model: ModelsDrone.Cruiserweight,
-        serial_number: '01234',
-        weight: 500,
-      })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(201)
-      .expect((res) => {
-        drone = res.body;
-        const { error } = droneSchema.validate(drone);
-        expect(error).toBeUndefined();
-      });
-
     return request(app.getHttpServer())
       .get('/drones/' + drone.id)
       .expect(200)
@@ -97,43 +85,77 @@ describe('DronesController (e2e)', () => {
   });
 
   it('/drones (POST)', async () => {
+    const { error } = droneSchema.validate(drone);
+    expect(error).toBeUndefined();
+  });
+
+  it('/drones (POST) -> invalid', async () => {
+    return request(app.getHttpServer())
+      .post('/drones')
+      .send({
+        battery: 200,
+        model: ModelsDrone.Cruiserweight,
+        serial_number: '01234',
+        weight: 5000,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/drones (POST) -> invalid', async () => {
     return request(app.getHttpServer())
       .post('/drones')
       .send({
         battery: 20,
+        serial_number: '01234',
+        weight: 500,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/drones (POST) -> invalid', async () => {
+    return request(app.getHttpServer())
+      .post('/drones')
+      .send({
         model: ModelsDrone.Cruiserweight,
         serial_number: '01234',
         weight: 500,
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201)
-      .expect(function (res) {
-        const body = res.body;
-        const { error } = droneSchema.validate(body);
-        expect(error).toBeUndefined();
-      });
+      .expect(400);
+  });
+
+  it('/drones (POST) -> invalid', async () => {
+    return request(app.getHttpServer())
+      .post('/drones')
+      .send({
+        battery: 200,
+        model: ModelsDrone.Cruiserweight,
+        weight: 5000,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/drones (POST) -> invalid', async () => {
+    return request(app.getHttpServer())
+      .post('/drones')
+      .send({
+        battery: 200,
+        model: ModelsDrone.Cruiserweight,
+        serial_number: '01234',
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
   });
 
   it('/drones/{id} (PATCH)', async () => {
-    let drone;
-    await request(app.getHttpServer())
-      .post('/drones')
-      .send({
-        battery: 20,
-        model: ModelsDrone.Cruiserweight,
-        serial_number: '01234',
-        weight: 500,
-      })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(201)
-      .expect(function (res) {
-        drone = res.body;
-        const { error } = droneSchema.validate(drone);
-        expect(error).toBeUndefined();
-      });
-
     await request(app.getHttpServer())
       .patch('/drones/' + drone.id)
       .send({
@@ -152,25 +174,51 @@ describe('DronesController (e2e)', () => {
       });
   });
 
-  it('/drones/{id} (DELETE)', async () => {
-    let drone;
+  it('/drones/{id} (PATCH) -> invalid', async () => {
     await request(app.getHttpServer())
-      .post('/drones')
+      .patch('/drones/' + drone.id)
       .send({
-        battery: 20,
-        model: ModelsDrone.Cruiserweight,
-        serial_number: '01234',
-        weight: 500,
+        battery: 101,
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201)
-      .expect((res) => {
-        drone = res.body;
-        const { error } = droneSchema.validate(drone);
-        expect(error).toBeUndefined();
-      });
+      .expect(400);
+  });
 
+  it('/drones/{id} (PATCH) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .patch('/drones/' + drone.id)
+      .send({
+        battery: -1,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/drones/{id} (PATCH) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .patch('/drones/' + drone.id)
+      .send({
+        weight: -1,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/drones/{id} (PATCH) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .patch('/drones/' + drone.id)
+      .send({
+        weight: 1001,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/drones/{id} (DELETE)', async () => {
     return request(app.getHttpServer())
       .delete('/drones/' + drone.id)
       .expect(200);
