@@ -6,6 +6,7 @@ import * as Joi from 'joi';
 
 describe('MedicationsController (e2e)', () => {
   let app: INestApplication;
+  let medication;
 
   const medicationSchema = Joi.object({
     id: Joi.number().required(),
@@ -29,9 +30,7 @@ describe('MedicationsController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
 
-  it('/medications (GET)', async () => {
     await request(app.getHttpServer())
       .post('/medications')
       .send({
@@ -43,8 +42,15 @@ describe('MedicationsController (e2e)', () => {
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201);
+      .expect(201)
+      .expect((res) => {
+        medication = res.body;
+        const { error } = medicationSchema.validate(medication);
+        expect(error).toBeUndefined();
+      });
+  });
 
+  it('/medications (GET)', async () => {
     return request(app.getHttpServer())
       .get('/medications')
       .expect(200)
@@ -56,25 +62,6 @@ describe('MedicationsController (e2e)', () => {
   });
 
   it('/medications/{id} (GET)', async () => {
-    let medication;
-    await request(app.getHttpServer())
-      .post('/medications')
-      .send({
-        code: '0000',
-        name: 'Example1',
-        image:
-          'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
-        weight: 500,
-      })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(201)
-      .expect((res) => {
-        medication = res.body;
-        const { error } = medicationSchema.validate(medication);
-        expect(error).toBeUndefined();
-      });
-
     return request(app.getHttpServer())
       .get('/medications/' + medication.id)
       .expect(200)
@@ -86,11 +73,14 @@ describe('MedicationsController (e2e)', () => {
   });
 
   it('/medications (POST)', async () => {
-    let medication;
-    return request(app.getHttpServer())
+    const { error } = medicationSchema.validate(medication);
+    expect(error).toBeUndefined();
+  });
+
+  it('/medications (POST) -> invalid', async () => {
+    await request(app.getHttpServer())
       .post('/medications')
       .send({
-        code: '0000',
         name: 'Example1',
         image:
           'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
@@ -98,16 +88,23 @@ describe('MedicationsController (e2e)', () => {
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201)
-      .expect(function (res) {
-        medication = res.body;
-        const { error } = medicationSchema.validate(medication);
-        expect(error).toBeUndefined();
-      });
+      .expect(400);
   });
 
-  it('/medications/{id} (PATCH)', async () => {
-    let medication;
+  it('/medications (POST) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .post('/medications')
+      .send({
+        code: '0000',
+        name: 'Example1',
+        weight: 500,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/medications (POST) -> invalid', async () => {
     await request(app.getHttpServer())
       .post('/medications')
       .send({
@@ -115,17 +112,57 @@ describe('MedicationsController (e2e)', () => {
         name: 'Example1',
         image:
           'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/medications (POST) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .post('/medications')
+      .send({
+        code: '0000',
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
         weight: 500,
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201)
-      .expect((res) => {
-        medication = res.body;
-        const { error } = medicationSchema.validate(medication);
-        expect(error).toBeUndefined();
-      });
+      .expect(400);
+  });
 
+  it('/medications (POST) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .post('/medications')
+      .send({
+        code: '0000',
+        name: 'Example1',
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
+        weight: -1,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/medications (POST) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .post('/medications')
+      .send({
+        code: '0000',
+        name: 'Example1',
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
+        weight: 1001,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/medications/{id} (PATCH)', async () => {
     await request(app.getHttpServer())
       .patch('/medications/' + medication.id)
       .send({
@@ -143,28 +180,38 @@ describe('MedicationsController (e2e)', () => {
       });
   });
 
-  it('/medications/{id} (DELETE)', async () => {
-    let medication;
+  it('/medications/{id} (PATCH) -> invalid', async () => {
     await request(app.getHttpServer())
-      .post('/medications')
+      .patch('/medications/' + medication.id)
       .send({
-        code: '0000',
-        name: 'Example1',
-        image:
-          'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
-        weight: 500,
+        weight: -1,
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201)
-      .expect((res) => {
-        medication = res.body;
-        const { error } = medicationSchema.validate(medication);
-        expect(error).toBeUndefined();
-      });
+      .expect(400);
+  });
 
+  it('/medications/{id} (PATCH) -> invalid', async () => {
+    await request(app.getHttpServer())
+      .patch('/medications/' + medication.id)
+      .send({
+        weight: 1001,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  it('/medications/{id} (DELETE)', async () => {
     return request(app.getHttpServer())
       .delete('/medications/' + medication.id)
+      .expect('Content-Type', /json/)
+      .expect(200);
+  });
+
+  it('/medications/{id} (DELETE) - invalid', async () => {
+    return request(app.getHttpServer())
+      .delete('/medications/' + 999)
       .expect('Content-Type', /json/)
       .expect(200);
   });

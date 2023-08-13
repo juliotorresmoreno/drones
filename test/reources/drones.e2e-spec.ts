@@ -223,4 +223,10 @@ describe('DronesController (e2e)', () => {
       .delete('/drones/' + drone.id)
       .expect(200);
   });
+
+  it('/drones/{id} (DELETE) - invalid', async () => {
+    return request(app.getHttpServer())
+      .delete('/drones/' + 999)
+      .expect(200);
+  });
 });
