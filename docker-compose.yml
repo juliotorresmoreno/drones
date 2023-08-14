@@ -1,0 +1,19 @@
+services:
+  drone:
+    image: drone
+    container_name: drone
+    environment:
+      NODE_ENV: development
+    ports:
+      - '3000:3000'
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --silent --fail localhost:3000 || exit 1']
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - drone
+
+networks:
+  drone:
+    driver: bridge
