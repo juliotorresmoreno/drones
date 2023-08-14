@@ -44,17 +44,6 @@ describe('UpdateMedicationDto', () => {
     expect(error).not.toBeUndefined();
   });
 
-  it('should UpdateMedicationDtoSchema be fail', async () => {
-    const { error } = UpdateMedicationDtoSchema.validate({
-      code: '0000',
-      name: 'Example1',
-      image:
-        'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_Drone.jpg',
-      weight: 1001,
-    });
-    expect(error).not.toBeUndefined();
-  });
-
   it('should UpdateMedicationDtoSchema be success', async () => {
     const { error } = UpdateMedicationDtoSchema.validate({
       code: '0000',

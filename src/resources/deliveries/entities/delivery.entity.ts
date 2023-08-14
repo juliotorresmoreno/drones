@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import * as Joi from 'joi';
 import { JoiSchema, JoiSchemaOptions } from 'joi-class-decorators';
-import { DroneEntity } from 'src/resources/drones/entities/drones.entity';
-import { MedicationEntity } from 'src/resources/medications/entities/medication.entity';
+import { DroneEntity } from '../../drones/entities/drones.entity';
+import { MedicationEntity } from '../../medications/entities/medication.entity';
 
 @JoiSchemaOptions({
   allowUnknown: false,

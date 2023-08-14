@@ -32,7 +32,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ErrorResponse, SuccessResponse } from 'src/helper/http.responses';
+import { ErrorResponse, SuccessResponse } from '../../../src/helper/http.responses';
 import { MedicationEntity } from './entities/medication.entity';
 
 @Controller('medications')

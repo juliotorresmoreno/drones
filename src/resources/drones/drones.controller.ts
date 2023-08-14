@@ -26,7 +26,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ErrorResponse, SuccessResponse } from 'src/helper/http.responses';
+import { ErrorResponse, SuccessResponse } from '../../../src/helper/http.responses';
 import { DroneEntity, DronesEntity } from './entities/drones.entity';
 
 @Controller('drones')

@@ -89,7 +89,7 @@ describe('UpdateDroneDto', () => {
       battery: 90,
       model: ModelsDrone.Cruiserweight,
       serial_number: '01234',
-      weight: 1001,
+      weight: 501,
     } as Drone);
     expect(error).not.toBeUndefined();
   });

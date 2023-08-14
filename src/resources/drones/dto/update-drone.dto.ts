@@ -29,7 +29,7 @@ export class UpdateDroneDto {
   readonly model?: ModelDrone;
 
   @ApiProperty()
-  @JoiSchema(Joi.number().min(0).max(1000))
+  @JoiSchema(Joi.number().min(0).max(500))
   readonly weight?: number;
 
   @ApiProperty()

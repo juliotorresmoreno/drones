@@ -207,17 +207,6 @@ describe('DronesController (e2e)', () => {
       .expect(400);
   });
 
-  it('/drones/{id} (PATCH) -> invalid', async () => {
-    await request(app.getHttpServer())
-      .patch('/drones/' + drone.id)
-      .send({
-        weight: 1001,
-      })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400);
-  });
-
   it('/drones/{id} (DELETE)', async () => {
     return request(app.getHttpServer())
       .delete('/drones/' + drone.id)

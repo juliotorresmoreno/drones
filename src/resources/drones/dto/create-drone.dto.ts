@@ -26,7 +26,7 @@ export class CreateDroneDto {
   readonly model: ModelDrone;
 
   @ApiProperty()
-  @JoiSchema(Joi.number().min(0).max(1000).required())
+  @JoiSchema(Joi.number().min(0).max(500).required())
   readonly weight: number;
 
   @ApiProperty()

@@ -147,21 +147,6 @@ describe('MedicationsController (e2e)', () => {
       .expect(400);
   });
 
-  it('/medications (POST) -> invalid', async () => {
-    await request(app.getHttpServer())
-      .post('/medications')
-      .send({
-        code: '0000',
-        name: 'Example1',
-        image:
-          'https://upload.wikimedia.org/wikipedia/commons/a/af/WMCH_medication.jpg',
-        weight: 1001,
-      })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400);
-  });
-
   it('/medications/{id} (PATCH)', async () => {
     await request(app.getHttpServer())
       .patch('/medications/' + medication.id)
@@ -185,17 +170,6 @@ describe('MedicationsController (e2e)', () => {
       .patch('/medications/' + medication.id)
       .send({
         weight: -1,
-      })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400);
-  });
-
-  it('/medications/{id} (PATCH) -> invalid', async () => {
-    await request(app.getHttpServer())
-      .patch('/medications/' + medication.id)
-      .send({
-        weight: 1001,
       })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)

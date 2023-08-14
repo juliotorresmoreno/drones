@@ -8,7 +8,7 @@ export class UpdateMedicationDto {
   readonly name?: string;
 
   @ApiProperty()
-  @JoiSchema(Joi.number().min(0).max(1000))
+  @JoiSchema(Joi.number().min(0))
   readonly weight?: number;
 
   @ApiProperty()

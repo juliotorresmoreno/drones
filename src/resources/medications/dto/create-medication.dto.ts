@@ -15,7 +15,7 @@ export class CreateMedicationDto {
   readonly name: string;
 
   @ApiProperty()
-  @JoiSchema(Joi.number().min(0).max(1000).required())
+  @JoiSchema(Joi.number().min(0).required())
   readonly weight: number;
 
   @ApiProperty()
