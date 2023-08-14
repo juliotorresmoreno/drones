@@ -15,7 +15,9 @@ export class CreateDroneDto {
   @JoiSchema(Joi.string().required())
   readonly serial_number: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    enum: ['Lightweight', 'Middleweight', 'Cruiserweight', 'Heavyweight'],
+  })
   @JoiSchema(
     Joi.string()
       .valid('Lightweight', 'Middleweight', 'Cruiserweight', 'Heavyweight')
