@@ -5,19 +5,19 @@ import * as Joi from 'joi';
 export class UpdateMedicationDto {
   @ApiProperty()
   @JoiSchema(Joi.string())
-  name?: string;
+  readonly name?: string;
 
   @ApiProperty()
   @JoiSchema(Joi.number().min(0).max(1000))
-  weight?: number;
+  readonly weight?: number;
 
   @ApiProperty()
   @JoiSchema(Joi.string())
-  code?: string;
+  readonly code?: string;
 
   @ApiProperty()
   @JoiSchema(Joi.string().uri())
-  image?: string;
+  readonly image?: string;
 }
 
 export const UpdateMedicationDtoSchema = getClassSchema(UpdateMedicationDto);

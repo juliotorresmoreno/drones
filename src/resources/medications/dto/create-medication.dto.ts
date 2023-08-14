@@ -12,19 +12,19 @@ import {
 export class CreateMedicationDto {
   @ApiProperty()
   @JoiSchema(Joi.string().required())
-  name: string;
+  readonly name: string;
 
   @ApiProperty()
   @JoiSchema(Joi.number().min(0).max(1000).required())
-  weight: number;
+  readonly weight: number;
 
   @ApiProperty()
   @JoiSchema(Joi.string().required())
-  code: string;
+  readonly code: string;
 
   @ApiProperty()
   @JoiSchema(Joi.string().uri().required())
-  image: string;
+  readonly image: string;
 }
 
 export const CreateMedicationDtoSchema = getClassSchema(CreateMedicationDto);

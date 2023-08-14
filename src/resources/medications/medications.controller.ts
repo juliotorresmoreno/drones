@@ -23,6 +23,16 @@ import {
   UpdateMedicationDtoSchema,
 } from './dto/update-medication.dto';
 import { JoiValidationPipe } from '../../pipes/joiValidation.pipe';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { ErrorResponse, SuccessResponse } from 'src/helper/http.responses';
+import { MedicationEntity } from './entities/medication.entity';
 
 @Controller('medications')
 export class MedicationsController {
@@ -32,6 +42,29 @@ export class MedicationsController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateMedicationDtoSchema))
+  @ApiHeader({
+    name: 'content-type',
+    enum: ['application/json'],
+    allowEmptyValue: false,
+    required: true,
+    example: 'application/json',
+  })
+  @ApiCreatedResponse({
+    description: 'Created',
+    type: MedicationEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
+  @ApiBody({
+    required: true,
+    type: CreateMedicationDto,
+  })
   create(@Body() createMedicationDto: CreateMedicationDto) {
     return this.medicationsService.create(createMedicationDto).catch((err) => {
       this.logger.error(err);
@@ -43,6 +76,18 @@ export class MedicationsController {
   }
 
   @Get()
+  @ApiOkResponse({
+    description: 'Drones',
+    type: MedicationEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
   findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
     return this.medicationsService.findAll().catch((err) => {
       this.logger.error(err);
@@ -54,6 +99,18 @@ export class MedicationsController {
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    description: 'Drone',
+    type: MedicationEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
   findOne(@Param('id') id: string) {
     return this.medicationsService
       .findOne(+id)
@@ -74,6 +131,29 @@ export class MedicationsController {
 
   @Patch(':id')
   @UsePipes(new JoiValidationPipe(UpdateMedicationDtoSchema))
+  @ApiHeader({
+    name: 'content-type',
+    enum: ['application/json'],
+    allowEmptyValue: false,
+    required: true,
+    example: 'application/json',
+  })
+  @ApiOkResponse({
+    description: 'Updated',
+    type: MedicationEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
+  @ApiBody({
+    required: true,
+    type: UpdateMedicationDto,
+  })
   update(
     @Param('id') id: string,
     @Body() updateMedicationDto: UpdateMedicationDto,
@@ -90,6 +170,18 @@ export class MedicationsController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({
+    description: 'Deleted',
+    type: SuccessResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
   remove(@Param('id') id: string) {
     return this.medicationsService
       .remove(+id)
