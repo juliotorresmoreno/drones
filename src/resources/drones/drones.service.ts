@@ -1,7 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateDroneDto } from './dto/create-drone.dto';
 import { UpdateDroneDto } from './dto/update-drone.dto';
-import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOptionsWhere,
+  QueryFailedError,
+  Repository,
+} from 'typeorm';
 import { Drone, StateDrone, StatesDrone } from '../../entities/drone.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,7 +21,18 @@ export class DronesService {
   }: CreateDroneDto & { state?: StateDrone }) {
     return this.repository
       .insert({ ...CreateDroneDto, state })
-      .then(({ identifiers }) => this.findOne(+identifiers[0].id));
+      .then(({ identifiers }) => this.findOne(+identifiers[0].id))
+      .catch((err) => {
+        if (err instanceof QueryFailedError) {
+          if (err.driverError.toString().indexOf('UNIQUE') > 0) {
+            throw new BadRequestException(
+              `serial number "${CreateDroneDto.serial_number}" already exists!`,
+            );
+          }
+          throw new BadRequestException();
+        }
+        throw err;
+      });
   }
 
   findAll(options?: FindManyOptions<Drone>) {

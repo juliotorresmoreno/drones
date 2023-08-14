@@ -1,11 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 export enum ModelsDrone {
   Lightweight = 'Lightweight',
   Middleweight = 'Middleweight',
   Cruiserweight = 'Cruiserweight',
-  Heavyweight = 'Heavyweight'
-};
+  Heavyweight = 'Heavyweight',
+}
 
 export type ModelDrone = ModelsDrone;
 
@@ -15,8 +22,8 @@ export enum StatesDrone {
   LOADED = 'LOADED',
   DELIVERING = 'DELIVERING',
   DELIVERED = 'DELIVERED',
-  RETURNING = 'RETURNING'
-};
+  RETURNING = 'RETURNING',
+}
 
 export type StateDrone = StatesDrone;
 
@@ -27,6 +34,7 @@ export class Drone {
 
   @Column({
     length: 100,
+    unique: true,
   })
   serial_number: string;
 
