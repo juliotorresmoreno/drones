@@ -1,5 +1,6 @@
 services:
   drone:
+    build: .
     image: drone
     container_name: drone
     environment:
