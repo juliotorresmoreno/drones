@@ -23,6 +23,16 @@ import {
   UpdateDeliveryDtoSchema,
 } from './dto/update-delivery.dto';
 import { JoiValidationPipe } from '../../pipes/joiValidation.pipe';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { ErrorResponse, SuccessResponse } from 'src/helper/http.responses';
+import { DeliveryEntity } from './entities/delivery.entity';
 
 @Controller('deliveries')
 export class DeliveriesController {
@@ -32,6 +42,29 @@ export class DeliveriesController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateDeliveryDtoSchema))
+  @ApiHeader({
+    name: 'content-type',
+    enum: ['application/json'],
+    allowEmptyValue: false,
+    required: true,
+    example: 'application/json',
+  })
+  @ApiCreatedResponse({
+    description: 'Created',
+    type: DeliveryEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
+  @ApiBody({
+    required: true,
+    type: CreateDeliveryDto,
+  })
   create(@Body() createDeliveryDto: CreateDeliveryDto) {
     return this.deliveriesService.create(createDeliveryDto).catch((err) => {
       this.logger.error(err);
@@ -43,6 +76,18 @@ export class DeliveriesController {
   }
 
   @Get()
+  @ApiOkResponse({
+    description: 'Deliveries',
+    type: DeliveryEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
   findAll(@Query('take') take = 10, @Query('skip') skip = 0) {
     return this.deliveriesService
       .findAll({
@@ -59,6 +104,18 @@ export class DeliveriesController {
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    description: 'Delivery',
+    type: DeliveryEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
   findOne(@Param('id') id: string) {
     return this.deliveriesService
       .findOne(+id)
@@ -79,6 +136,29 @@ export class DeliveriesController {
 
   @Patch(':id/transition')
   @UsePipes(new JoiValidationPipe(UpdateDeliveryDtoSchema))
+  @ApiHeader({
+    name: 'content-type',
+    enum: ['application/json'],
+    allowEmptyValue: false,
+    required: true,
+    example: 'application/json',
+  })
+  @ApiOkResponse({
+    description: 'Updated',
+    type: DeliveryEntity,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
+  @ApiBody({
+    required: true,
+    type: UpdateDeliveryDto,
+  })
   transition(
     @Param('id') id: string,
     @Body() updateDeliveryDto: UpdateDeliveryDto,
@@ -95,6 +175,18 @@ export class DeliveriesController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({
+    description: 'Deleted',
+    type: SuccessResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'BadRequest',
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'InternalServerError',
+    type: ErrorResponse,
+  })
   remove(@Param('id') id: string) {
     return this.deliveriesService
       .remove(+id)
