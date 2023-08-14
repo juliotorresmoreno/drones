@@ -24,11 +24,13 @@ import {
   ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ErrorResponse, SuccessResponse } from 'src/helper/http.responses';
 import { DroneEntity, DronesEntity } from './entities/drones.entity';
 
 @Controller('drones')
+@ApiTags('Api')
 export class DronesController {
   private readonly logger = new Logger(DronesController.name);
 

@@ -30,11 +30,13 @@ import {
   ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ErrorResponse, SuccessResponse } from 'src/helper/http.responses';
 import { MedicationEntity } from './entities/medication.entity';
 
 @Controller('medications')
+@ApiTags('Api')
 export class MedicationsController {
   private readonly logger = new Logger(MedicationsController.name);
 
